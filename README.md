@@ -2,7 +2,7 @@
 
 Watch a retail product page and get a Slack alert when its price changes, whether it goes up or down.
 
-[![Watch the video](https://img.shields.io/badge/YouTube-Watch%20the%20walkthrough-red?logo=youtube)](<YOUR_YOUTUBE_LINK>)
+[![Watch the video](https://img.shields.io/badge/YouTube-Watch%20the%20walkthrough-red?logo=youtube)](https://www.youtube.com/watch?v=0ljhsOSJs3E)
 
 ```
 🔔 Price change detected
