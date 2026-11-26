@@ -1,7 +1,5 @@
 # Price Change Monitor
 
-**Make + AI Web Scraper + Slack, no code**
-
 Watch a retail product page and get a Slack alert when its price changes, whether it goes up or down.
 
 [![Watch the video](https://img.shields.io/badge/YouTube-Watch%20the%20walkthrough-red?logo=youtube)](<YOUR_YOUTUBE_LINK>)
