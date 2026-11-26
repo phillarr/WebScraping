@@ -4,6 +4,8 @@ Watch a retail product page and get a Slack alert when its price changes, whethe
 
 [![Watch the video](https://img.shields.io/badge/YouTube-Watch%20the%20walkthrough-red?logo=youtube)](https://www.youtube.com/watch?v=0ljhsOSJs3E)
 
+[![Watch the video on YouTube](thumbnail.jpg)](https://www.youtube.com/watch?v=0ljhsOSJs3E)
+
 ```
 🔔 Price change detected
 Casque gamer JBL Quantum 910 - sans fil - PS5, Xbox, Switch, PC - jusqu'à 39 heures
