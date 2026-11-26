@@ -1,0 +1,530 @@
+{
+    "name": "Price Change Monitor",
+    "flow": [
+        {
+            "id": 1,
+            "module": "web-scraper:scrapeWithAi",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 13419350
+            },
+            "mapper": {
+                "url": "https://www.boulanger.com/ref/1196271",
+                "goal": "Open https://www.boulanger.com/ref/1196271 and extract the product information. If a cookie banner appears, decline it. Return JSON with these fields: product_name (string), current_price (number, use a dot as decimal separator, no currency symbol), reference_price (number or null), discount_percent (number or null), seller (string), condition (\"new\" or \"refurbished\"), stock_status (string).",
+                "output": "ai_extract",
+                "maxSteps": "10"
+            },
+            "metadata": {
+                "designer": {
+                    "x": -108,
+                    "y": -12
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "4d8d0323d177e28a"
+                },
+                "restore": {
+                    "expect": {
+                        "output": {
+                            "mode": "chose",
+                            "label": "AI extracted JSON"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "web-scraper"
+                            },
+                            "label": "My Web Scraper connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:web-scraper",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "goal",
+                        "type": "text",
+                        "label": "Goal",
+                        "required": true
+                    },
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "Start URL"
+                    },
+                    {
+                        "name": "output",
+                        "type": "select",
+                        "label": "Output format",
+                        "validate": {
+                            "enum": [
+                                "ai_extract",
+                                "text",
+                                "html",
+                                "markdown",
+                                "screenshot"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "maxSteps",
+                        "type": "number",
+                        "label": "Max steps"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {
+                "type": 725899
+            },
+            "mapper": {
+                "json": "{{1.result.data}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 190,
+                    "y": -4
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "4c9b459ce2268704"
+                },
+                "restore": {
+                    "parameters": {
+                        "type": {
+                            "label": "My data structure"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "json",
+                        "type": "text",
+                        "label": "JSON string",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "help": "",
+                        "name": "product_name",
+                        "type": "text",
+                        "label": "Product name"
+                    },
+                    {
+                        "help": "",
+                        "name": "current_price",
+                        "type": "number",
+                        "label": "Current price"
+                    },
+                    {
+                        "help": "",
+                        "name": "reference_price",
+                        "type": "number",
+                        "label": "Reference price"
+                    },
+                    {
+                        "help": "",
+                        "name": "discount_percent",
+                        "type": "number",
+                        "label": "Discount percent"
+                    },
+                    {
+                        "help": "",
+                        "name": "seller",
+                        "type": "text",
+                        "label": "Seller"
+                    },
+                    {
+                        "help": "",
+                        "name": "condition",
+                        "type": "text",
+                        "label": "Condition"
+                    },
+                    {
+                        "help": "",
+                        "name": "stock_status",
+                        "type": "text",
+                        "label": "Stock status"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "datastore:GetRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 274231
+            },
+            "mapper": {
+                "key": "1196271",
+                "returnWrapped": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 457,
+                    "y": -10
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "f24cd9f2cc9b29cc"
+                },
+                "restore": {
+                    "parameters": {
+                        "datastore": {
+                            "label": "price_record"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key",
+                        "required": true
+                    },
+                    {
+                        "name": "returnWrapped",
+                        "type": "boolean",
+                        "label": "Return Wrapped Output",
+                        "required": true
+                    }
+                ],
+                "interface": [
+                    {
+                        "help": "",
+                        "name": "price",
+                        "type": "number",
+                        "label": null,
+                        "default": null,
+                        "required": false
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "datastore:AddRecord",
+            "version": 1,
+            "parameters": {
+                "datastore": 274231
+            },
+            "mapper": {
+                "key": "1196271",
+                "data": {
+                    "price": "{{2.current_price}}"
+                },
+                "overwrite": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 757,
+                    "y": -10
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "7c558accc361fc1"
+                },
+                "restore": {
+                    "expect": {
+                        "overwrite": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "datastore": {
+                            "label": "price_record"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key"
+                    },
+                    {
+                        "name": "overwrite",
+                        "type": "boolean",
+                        "label": "Overwrite an existing record",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "spec": [
+                            {
+                                "name": "price",
+                                "type": "number",
+                                "label": null
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "slack:CreateMessage",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 10425665
+            },
+            "filter": {
+                "name": "Price changed",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{4.price}}",
+                            "o": "exist"
+                        },
+                        {
+                            "a": "{{2.current_price}}",
+                            "b": "{{4.price}}",
+                            "o": "number:notequal"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "text": "🔔 *Price change detected*\r\n*{{2.product_name}}*\r\nBefore: {{4.price}}€ → Now:{{2.current_price}} €\r\n🏪 {{2.seller}} · 📦 {{2.stock_status}}",
+                "parse": false,
+                "mrkdwn": true,
+                "channel": "C0CLUHS1Y3D",
+                "channelType": "public",
+                "channelWType": "list"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1033,
+                    "y": -17
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "e0b2bef7ed3f18d3"
+                },
+                "restore": {
+                    "expect": {
+                        "parse": {
+                            "mode": "chose"
+                        },
+                        "mrkdwn": {
+                            "mode": "chose"
+                        },
+                        "channel": {
+                            "mode": "chose",
+                            "label": "price-alerts"
+                        },
+                        "link_names": {
+                            "mode": "chose"
+                        },
+                        "channelType": {
+                            "label": "Public channel"
+                        },
+                        "channelWType": {
+                            "label": "Select from the list"
+                        },
+                        "unfurl_links": {
+                            "mode": "chose"
+                        },
+                        "unfurl_media": {
+                            "mode": "chose"
+                        },
+                        "reply_broadcast": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "slack2"
+                            },
+                            "label": "My Slack connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:slack2,slack3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "channelWType",
+                        "type": "select",
+                        "label": "Enter a channel ID or name",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "manualy",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "name": "blocks",
+                        "type": "text",
+                        "label": "Blocks"
+                    },
+                    {
+                        "name": "thread_ts",
+                        "type": "text",
+                        "label": "Thread message ID (time stamp)"
+                    },
+                    {
+                        "name": "reply_broadcast",
+                        "type": "boolean",
+                        "label": "Reply broadcast"
+                    },
+                    {
+                        "name": "link_names",
+                        "type": "boolean",
+                        "label": "Link names"
+                    },
+                    {
+                        "name": "parse",
+                        "type": "boolean",
+                        "label": "Parse message text"
+                    },
+                    {
+                        "name": "mrkdwn",
+                        "type": "boolean",
+                        "label": "Use markdown"
+                    },
+                    {
+                        "name": "unfurl_links",
+                        "type": "boolean",
+                        "label": "Unfurl primarily text-based content"
+                    },
+                    {
+                        "name": "unfurl_media",
+                        "type": "boolean",
+                        "label": "Unfurl media content"
+                    },
+                    {
+                        "name": "icon_emoji",
+                        "type": "text",
+                        "label": "Icon emoji"
+                    },
+                    {
+                        "name": "icon_url",
+                        "type": "url",
+                        "label": "Icon url"
+                    },
+                    {
+                        "name": "username",
+                        "type": "text",
+                        "label": "User name"
+                    },
+                    {
+                        "name": "channelType",
+                        "type": "select",
+                        "label": "Channel type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "public",
+                                "private",
+                                "im",
+                                "mpim"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "channel",
+                        "type": "select",
+                        "label": "Public channel",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com",
+        "notes": []
+    }
+}
